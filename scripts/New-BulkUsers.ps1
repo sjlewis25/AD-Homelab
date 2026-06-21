@@ -2,6 +2,14 @@
 # Each user is created in the correct OU, added to the matching department
 # security group, and assigned a temporary password that must be changed
 # at next logon.
+#
+# Usage: Pass the temporary password as a parameter rather than hardcoding it.
+# Example: .\New-BulkUsers.ps1 -TempPassword (Read-Host -AsSecureString "Temp password")
+
+param(
+    [Parameter(Mandatory=$true)]
+    [SecureString]$TempPassword
+)
 
 $newUsers = @(
     @{Name="Mike Johnson"; Sam="mjohnson"; OU="IT"},
@@ -10,7 +18,7 @@ $newUsers = @(
 )
 
 $domain = "corp.local"
-$tempPassword = ConvertTo-SecureString "ChangeMe123!" -AsPlainText -Force
+$tempPassword = $TempPassword
 
 foreach ($u in $newUsers) {
     New-ADUser `
