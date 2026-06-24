@@ -56,4 +56,55 @@ The original virtual machine was retired and a brand new virtual machine was bui
 **Lesson Learned**
 When a machine has a conflicting or orphaned domain membership that can't be resolved through standard unjoin methods, rebuilding the machine is often faster and more reliable than continuing to troubleshoot a broken machine account reference.
 
+---
+
+## Incident 4: OPNsense LAN Interface Not Detected
+
+**Symptom**
+After installing OPNsense in VirtualBox with two network adapters, only one interface (em0) was detected during interface assignment. The second adapter (em1) showed no link and could not be assigned as LAN.
+
+**Root Cause**
+VirtualBox's Internal Network adapter type did not initialize a link for the second adapter during the OPNsense install and first boot. OPNsense reported no link up on em1.
+
+**Resolution Attempted**
+Verified adapter settings in VirtualBox — adapter type and cable connected were both correct. Changing adapter settings with the VM powered off did not resolve the issue.
+
+**Final Resolution**
+Temporarily changed Adapter 2 from Internal Network to Host-only Adapter. This allowed OPNsense to detect em1 and complete interface assignment. After the web GUI was configured and accessible, Adapter 2 was switched back to Internal Network and em1 was manually typed during interface assignment to restore the correct lab topology.
+
+**Lesson Learned**
+VirtualBox Internal Network adapters can fail to present a link during OPNsense setup. Using Host-only temporarily to get through initial configuration, then switching back, is a reliable workaround.
+
+---
+
+## Incident 5: CLIENT1 on Wrong Subnet After OPNsense Install
+
+**Symptom**
+After OPNsense was configured with a LAN IP of 192.168.10.1, CLIENT1 could not reach the OPNsense web GUI.
+
+**Root Cause**
+CLIENT1 had a static IP of 192.168.1.50 from the previous flat network configuration, which is a different subnet than the OPNsense LAN (192.168.10.0/24).
+
+**Resolution**
+Updated CLIENT1's static IP configuration to 192.168.10.50/24 with a default gateway of 192.168.10.1 and DNS pointing to DC01 at 192.168.10.10. CLIENT1 was then able to reach the OPNsense web GUI successfully.
+
+**Lesson Learned**
+When introducing a firewall or router to an existing lab, all existing machines need their IP configuration reviewed to ensure they match the new subnet design.
+
+---
+
+## Incident 6: VLAN IP Conflict with Existing LAN Interface
+
+**Symptom**
+When configuring the IT VLAN interface with IP 192.168.10.1, OPNsense returned an error stating the IP was already in use by another interface.
+
+**Root Cause**
+The LAN interface (em1) was already assigned 192.168.10.1/24. Assigning the same IP to the IT VLAN interface caused a conflict.
+
+**Resolution**
+Changed the IT VLAN subnet to 192.168.11.0/24 with a gateway of 192.168.11.1, keeping HR on 192.168.20.0/24 and Sales on 192.168.30.0/24. The existing LAN interface retained 192.168.10.0/24 for DC01 and domain infrastructure.
+
+**Lesson Learned**
+Each interface in OPNsense must be on a unique subnet. Plan IP addressing before configuration to avoid conflicts, especially when VLANs are being layered on top of an existing LAN interface.
+
 

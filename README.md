@@ -28,6 +28,8 @@ Domain name: **corp.local**
 **Networking**
 - DHCP scope handing out addresses to client machines on the network
 - DNS integrated with Active Directory on the domain controller
+- OPNsense firewall with VLAN segmentation isolating IT, HR, and Sales departments
+- Firewall rules preventing cross-department access while allowing all VLANs to reach the domain controller
 
 **File Shares**
 - Department shares (HR, IT, Sales) with share and NTFS permissions locked down to the matching security group, replacing the default "Everyone" access
@@ -44,12 +46,13 @@ Domain name: **corp.local**
 ## Documentation
 
 - [Configuration Details](docs/configurations.md) — full settings for both machines, AD structure, DHCP, shares, and GPOs
+- [OPNsense Firewall Setup](docs/opnsense-setup.md) — VLAN design, firewall rules, and DHCP configuration
 - [Troubleshooting Log](docs/troubleshooting-log.md) — real issues encountered during the build and how each was resolved
 
 ## Skills Demonstrated
 
-Windows Server 2022 administration, Active Directory Domain Services, Group Policy Management, DNS/DHCP configuration, NTFS and share permissions, PowerShell scripting and automation, VirtualBox virtualization, systematic troubleshooting and root cause documentation.
+Windows Server 2022 administration, Active Directory Domain Services, Group Policy Management, DNS/DHCP configuration, NTFS and share permissions, PowerShell scripting and automation, VirtualBox virtualization, OPNsense firewall configuration, VLAN design and segmentation, systematic troubleshooting and root cause documentation.
 
 ## What's Next
 
-Planned next phase of this lab includes a pfSense firewall with VLAN segmentation, centralized log monitoring with a SIEM tool, and basic vulnerability scanning practice using Kali Linux.
+Planned next phase of this lab includes centralized log monitoring with a SIEM tool (Wazuh) and basic vulnerability scanning practice using Kali Linux.
